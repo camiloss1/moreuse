@@ -54,7 +54,6 @@ export class RegisterComponent implements OnInit {
     })
   }
 
-
   public get campos() {
     return this.registerForm.controls
   }
