@@ -3,15 +3,31 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './UI/components/home/home.component';
 import { ContactusComponent } from './UI/components/contactus/contactus.component';
 import { DefaultComponent } from './UI/layouts/default/default.component';
+import { FullscreenComponent } from './UI/layouts/fullscreen/fullscreen.component';
 import { LoginComponent } from './UI/components/login/login.component';
 
 const routes: Routes = [
-  
-    {path:"",component:DefaultComponent, children:[
-      {path:"",component:HomeComponent}
-    ]},
-  {path:"contact", component:ContactusComponent},
-  {path:"login", component:LoginComponent}
+
+  {
+    path: "", component: DefaultComponent, 
+    children: [
+      {
+        path: "", component: HomeComponent
+      },
+      {
+        path:"contact", component:ContactusComponent
+      }
+    ]
+  },
+  {
+    path: "fullscreen", component: FullscreenComponent,
+    children: [
+      {
+        path: "login", component: LoginComponent
+      }
+    ]
+  }
+
 ];
 
 @NgModule({
