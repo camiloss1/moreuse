@@ -5,6 +5,7 @@ import { ContactusComponent } from './UI/components/contactus/contactus.componen
 import { DefaultComponent } from './UI/layouts/default/default.component';
 import { FullscreenComponent } from './UI/layouts/fullscreen/fullscreen.component';
 import { LoginComponent } from './UI/components/login/login.component';
+import { RegisterComponent } from './UI/components/register/register.component';
 
 const routes: Routes = [
 
@@ -24,6 +25,9 @@ const routes: Routes = [
     children: [
       {
         path: "login", component: LoginComponent
+      },
+      {
+        path: "register", component: RegisterComponent
       }
     ]
   }

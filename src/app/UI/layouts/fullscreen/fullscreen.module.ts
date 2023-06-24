@@ -4,13 +4,15 @@ import { FullscreenComponent } from './fullscreen.component';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from '../../components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegisterComponent } from '../../components/register/register.component';
 
 
 
 @NgModule({
   declarations: [
     FullscreenComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,
