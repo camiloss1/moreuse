@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,19 +8,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
-
-    this.prueba('');
+    this.prueba(localStorage.getItem('message'));
   }
 
-  name: string | undefined;
+  name: string | undefined | null;
 
-  prueba(name: string) {
+  prueba(name: string | undefined | null) {
+    var token = localStorage.getItem('token')
+    var headers;
+    if (token) {
+
+      headers = new HttpHeaders().set('authorization', token);
+    }
+    const options = { headers: headers };
+
     if (name == '') {
       this.name = 'Juan Salazar';
     }
-    else
-    {
-    this.name = name;
+    else {
+      this.name = name;
     }
   }
 

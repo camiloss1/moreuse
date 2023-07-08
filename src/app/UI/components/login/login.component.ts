@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
       { type: 'pattern', message: 'Este campo debe contener por lo menos 1 mayuscula y una minuscula' }
     ]
   }
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -41,16 +42,25 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    var correo = this.loginForm.controls['email'].value;
+    var password = this.loginForm.controls['password'].value;
+    
+    this.http.post('https://run.mocky.io/v3/1758a518-3a80-45c9-bf46-13c22f40370d', { email: correo, contraseña: password }).subscribe({
+      next: (response: any) => {
+        localStorage.setItem('message', response.message)
+        console.log(this.loginForm.valid)
+        if (this.loginForm.valid) {
+          localStorage.setItem('token', correo + password);
 
-    if (this.loginForm.valid) {
-      var correo = this.loginForm.controls['email'].value;
-      var password = this.loginForm.controls['password'].value;
-      localStorage.setItem('token',correo + password);
-      this.router.navigate(['/']);
-    }
-    else {
-      alert('Este formulario no es valido');
-    }
+        }
+        else {
+          alert('Este formulario no es valido');
+        }
+      },
+      error: (e) => console.error(e),
+      complete: () => this.router.navigate(['/'])
+    })
+
   }
 
   public get campos() {
