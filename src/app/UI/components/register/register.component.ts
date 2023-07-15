@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Userusecase } from 'src/app/domain/models/User/usecase/userusecase';
+import { User } from 'src/app/domain/models/User/user';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-register',
@@ -15,7 +18,7 @@ export class RegisterComponent implements OnInit {
     name: [
       { type: 'required', message: 'Este campo es requerido' },
     ],
-    email: [ 
+    email: [
       { type: 'required', message: 'Este campo es requerido' },
       { type: 'email', message: 'Este campo es de tipo email' }
     ],
@@ -28,7 +31,7 @@ export class RegisterComponent implements OnInit {
       { type: 'pattern', message: 'Este campo debe contener por lo menos 1 mayuscula y una minuscula' }
     ]
   }
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private _userUseCase: Userusecase) { }
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', [
@@ -57,12 +60,37 @@ export class RegisterComponent implements OnInit {
   public get campos() {
     return this.registerForm.controls
   }
-  register(){
+  register() {
     if (this.registerForm.valid) {
-      this.router.navigate(['/fullscreen/login']);
-    }
-    else {
-      alert('Este formulario no es valido');
+      var name = this.registerForm.controls['name'].value;
+      var email = this.registerForm.controls['email'].value;
+      var password = this.registerForm.controls['password'].value;
+      const user = new User();
+      user.name = name;
+      user.email = email;
+      user.password = password;
+      this._userUseCase.register(user).subscribe({
+        next: (response: User) => {
+          if (response) {
+            console.log(response);
+            Swal.fire({
+              title: `El Usuario ${response.name} ha sido creado`,
+              text: 'Usuario ya se encuentra disponible',
+              icon: 'success',
+              timer: 2000
+            })
+            this.router.navigate(['/fullscreen/login']);
+          }
+          else {
+            alert('Usuario no pudo ser registrado')
+          }
+        },
+        error: (response) => {
+          alert(response.message)
+        },
+        complete: () => this.router.navigate(['/fullscreen/login'])
+      })
     }
   }
+
 }

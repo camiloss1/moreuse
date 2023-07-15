@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Userusecase } from 'src/app/domain/models/User/usecase/userusecase';
+import { Token } from 'src/app/domain/models/token';
 
 @Component({
   selector: 'app-login',
@@ -27,38 +28,38 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      email: ['email', [
-        Validators.required,
-        Validators.email
+      email: ['', [
+        Validators.required
       ]
       ],
       password: [
         '', [
-          Validators.minLength(8),
-          Validators.required,
-          Validators.pattern(/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/gm)
+          Validators.minLength(6),
+          Validators.required
         ]
       ]
     })
   }
 
   login() {
-    var correo = this.loginForm.controls['email'].value;
+    var username = this.loginForm.controls['email'].value;
     var password = this.loginForm.controls['password'].value;
-    if (this.loginForm.valid) {
-      this._userUseCase.login(correo, password).subscribe((response: any) => {
+    this._userUseCase.login(username, password).subscribe({
+      next: (response: Token) => {
         if (response.token != '') {
-          localStorage.setItem('token', response.token);
+          localStorage.setItem('token', response.token)
           this.router.navigate(['/'])
         }
         else {
-          alert('Verifique sus credenciales e intente nuevamente');
+          alert('Usuario o contraseña incorrecta')
         }
-      })
-    }
-    else {
-      alert('Este formulario no es valido');
-    }
+      },
+      error: (response) => {
+        alert(response.message)
+      },
+      complete: () => this.router.navigate(['/'])
+    })
+
   }
 
   public get campos() {
