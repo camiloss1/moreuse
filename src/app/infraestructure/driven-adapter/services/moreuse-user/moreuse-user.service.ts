@@ -1,24 +1,24 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usergateway } from 'src/app/domain/models/User/gateway/usergateway';
 import { User } from 'src/app/domain/models/User/user';
 import { Token } from 'src/app/domain/models/token';
+import { GenericService } from '../helpers/generic.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoreuseUserService extends Usergateway {
 
-  constructor(private http: HttpClient) {
+  private _url = environment.urlService;
+  constructor(private genericService : GenericService) {
     super();
   }
   login(username: string,password: string): Observable<Token> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<Token>('https://dummyjson.com/auth/login', {username,password }, { headers })
+    return this.genericService.post<Token>(this._url,'auth/login', {username,password })
   }
   register(user:User): Observable<User> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<User>('https://dummyjson.com/users/add', {user}, { headers })
+    return this.genericService.post<User>(this._url,'users/add', user)
   }
 }

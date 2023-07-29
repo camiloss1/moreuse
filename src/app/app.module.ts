@@ -7,8 +7,11 @@ import { DefaultModule } from './UI/layouts/default/default.module';
 import { SharedModule } from './UI/shared/shared.module';
 import { FullscreenModule } from './UI/layouts/fullscreen/fullscreen.module';
 import { Usergateway } from './domain/models/User/gateway/usergateway';
-import { MoreuseUserService } from './infraestructure/driven-adapter/services/moreuse-user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MoreuseUserService } from './infraestructure/driven-adapter/services/moreuse-user/moreuse-user.service';
+import { ClothesGateway } from './domain/models/Clothes/gateway/clothesgateway';
+import { MoreuseClothesService } from './infraestructure/driven-adapter/services/moreuse-clothes/moreuse-clothes.service';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     SharedModule,
     HttpClientModule
   ],
-  providers: [{ provide: Usergateway, useClass: MoreuseUserService }],
+  providers: [{ provide: Usergateway, useClass: MoreuseUserService },
+  { provide: ClothesGateway, useClass: MoreuseClothesService }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

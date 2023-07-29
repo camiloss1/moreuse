@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Clothes } from 'src/app/domain/models/Clothes/clothes';
+import { Clothesusecase } from 'src/app/domain/models/Clothes/usecase/clothesusecase';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +10,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private clothesUseCase: Clothesusecase) { }
   name: string | undefined | null;
-
+  clothes!: Clothes;
   ngOnInit(): void {
+    this.getClothes();
     var token = localStorage.getItem('token')
     var headers;
     if (token) {
@@ -28,4 +31,13 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  getClothes() {
+    this.clothesUseCase.getClothes().subscribe((data: Clothes) => {
+      this.clothes = data;
+      console.log(this.clothes);
+    })
+  }
+//  metodo(id:string){
+//   this.router.navigate([`//default/productdetail/${id}`])
+//  }
 }
