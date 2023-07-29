@@ -7,10 +7,11 @@ import { DefaultModule } from './UI/layouts/default/default.module';
 import { SharedModule } from './UI/shared/shared.module';
 import { FullscreenModule } from './UI/layouts/fullscreen/fullscreen.module';
 import { Usergateway } from './domain/models/User/gateway/usergateway';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MoreuseUserService } from './infraestructure/driven-adapter/services/moreuse-user/moreuse-user.service';
 import { ClothesGateway } from './domain/models/Clothes/gateway/clothesgateway';
 import { MoreuseClothesService } from './infraestructure/driven-adapter/services/moreuse-clothes/moreuse-clothes.service';
+import { AuthInterceptor } from './infraestructure/driven-adapter/services/helpers/authinterceptor';
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import { MoreuseClothesService } from './infraestructure/driven-adapter/services
     SharedModule,
     HttpClientModule
   ],
-  providers: [{ provide: Usergateway, useClass: MoreuseUserService },
+  providers: [
+  {provide:HTTP_INTERCEPTORS, useClass:AuthInterceptor,multi:true},
+  { provide: Usergateway, useClass: MoreuseUserService },
   { provide: ClothesGateway, useClass: MoreuseClothesService }],
   bootstrap: [AppComponent]
 })
